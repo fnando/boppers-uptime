@@ -184,4 +184,40 @@ class BoppersUptimeTest < Minitest::Test
 
     assert call[1][:message].include?("since FORMAT.")
   end
+
+  test "intercepts socket errors" do
+    bopper = Boppers::Uptime.new(name: "Example",
+                                 url: "http://example.com",
+                                 format: "FORMAT")
+    call = nil
+
+    stub_request(:get, "http://example.com")
+      .to_raise(SocketError)
+
+    Boppers
+      .expects(:notify)
+      .with {|*args| call = args }
+
+    bopper.call
+
+    assert call[1][:title].include?("Example is down")
+  end
+
+  test "intercepts timeouts" do
+    bopper = Boppers::Uptime.new(name: "Example",
+                                 url: "http://example.com",
+                                 format: "FORMAT")
+    call = nil
+
+    stub_request(:get, "http://example.com")
+      .to_raise(Timeout::Error)
+
+    Boppers
+      .expects(:notify)
+      .with {|*args| call = args }
+
+    bopper.call
+
+    assert call[1][:title].include?("Example is down")
+  end
 end

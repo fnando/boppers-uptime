@@ -27,9 +27,12 @@ module Boppers
     end
 
     def call
-      response = HttpClient.get(url)
-
-      succeed = valid_response?(response)
+      succeed = begin
+                  response = HttpClient.get(url, {}, {}, timeout: 1)
+                  valid_response?(response)
+                rescue SocketError, Timeout::Error
+                  false
+                end
 
       return succeed! if succeed
 
