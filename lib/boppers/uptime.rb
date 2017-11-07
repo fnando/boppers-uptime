@@ -30,7 +30,7 @@ module Boppers
       succeed = begin
                   response = HttpClient.get(url, {}, {}, timeout: 1)
                   valid_response?(response)
-                rescue SocketError, Timeout::Error
+                rescue SocketError, Timeout::Error, Net::OpenTimeout
                   false
                 end
 
