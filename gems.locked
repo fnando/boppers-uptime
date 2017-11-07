@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    boppers-uptime (0.1.1)
+    boppers-uptime (0.1.2)
       boppers
       tzinfo
 
@@ -13,7 +13,7 @@ GEM
     aitch (1.0.2)
       nokogiri (>= 1.6.0)
     awesome_print (1.8.0)
-    boppers (0.0.2)
+    boppers (0.0.3)
       aitch
       thor
     byebug (9.1.0)
