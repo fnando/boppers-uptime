@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    boppers-uptime (0.1.0)
+    boppers-uptime (0.1.1)
       boppers
       tzinfo
 
