@@ -36,7 +36,7 @@ module Boppers
       @status = [status].flatten.map(&:to_i)
       @contain = contain
       @min_failures = min_failures
-      @timezone = find_timezone(timezone)
+      @timezone = find_timezone(timezone) || find_timezone("Etc/UTC")
       @format = format
       @failures = []
     end
@@ -121,10 +121,8 @@ module Boppers
     def find_timezone(name)
       TZInfo::Timezone.get(name)
     rescue TZInfo::InvalidTimezoneIdentifier
-      name = name.to_sym
-
       TZInfo::Timezone.all.find do |zone|
-        zone.current_period.abbreviation == name
+        zone.current_period.abbreviation.to_s == name
       end
     end
   end
