@@ -26,7 +26,7 @@ module Boppers
       interval: 30,
       status: 200,
       contain: nil,
-      min_failures: 1,
+      min_failures: 2,
       timezone: Time.now.getlocal.zone,
       format: FORMAT
     )
@@ -45,7 +45,7 @@ module Boppers
       succeed = begin
         response = HttpClient.get(url, {}, {}, timeout: 1)
         valid_response?(response)
-      rescue SocketError, Timeout::Error, Net::OpenTimeout
+      rescue SocketError, Timeout::Error, Net::OpenTimeout # rubocop:disable Lint/ShadowedException
         false
       end
 
@@ -81,10 +81,9 @@ module Boppers
       duration = RelativeTime.call(offline_at, online_at)
 
       title = "#{name} is up"
-      message = [
-        "#{name} is back online at #{format_time(online_at)}, after #{duration} of downtime.",
-        "You can check it at #{url}."
-      ].join("\n")
+      message = "#{name} is back online at #{format_time(online_at)}, " \
+                "after #{duration} of downtime.\n" \
+                "You can check it at #{url}."
 
       Boppers.notify(
         :uptime,
