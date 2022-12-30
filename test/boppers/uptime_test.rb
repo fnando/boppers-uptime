@@ -142,7 +142,7 @@ class BoppersUptimeTest < Minitest::Test
     assert_equal :uptime, name
     assert_equal "Example is up", kwargs[:title]
     assert_equal message, kwargs[:message]
-    assert_equal Hash[color: :green], kwargs[:options]
+    assert_equal({color: :green}, kwargs[:options])
   end
 
   test "formats time in given timezone" do

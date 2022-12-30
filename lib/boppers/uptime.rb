@@ -9,12 +9,27 @@ module Boppers
   class Uptime
     FORMAT = "%Y-%m-%dT%H:%M:%S%:z"
 
-    attr_reader :name, :url, :interval, :status, :contain, :min_failures,
-                :timezone, :format, :failures, :failed_at
+    attr_reader :name,
+                :url,
+                :interval,
+                :status,
+                :contain,
+                :min_failures,
+                :timezone,
+                :format,
+                :failures,
+                :failed_at
 
-    def initialize(name:, url:, interval: 30, status: 200, contain: nil,
-                   min_failures: 1, timezone: Time.now.getlocal.zone,
-                   format: FORMAT)
+    def initialize(
+      name:,
+      url:,
+      interval: 30,
+      status: 200,
+      contain: nil,
+      min_failures: 1,
+      timezone: Time.now.getlocal.zone,
+      format: FORMAT
+    )
       @name = name
       @url = url
       @interval = interval
@@ -28,11 +43,11 @@ module Boppers
 
     def call
       succeed = begin
-                  response = HttpClient.get(url, {}, {}, timeout: 1)
-                  valid_response?(response)
-                rescue SocketError, Timeout::Error, Net::OpenTimeout
-                  false
-                end
+        response = HttpClient.get(url, {}, {}, timeout: 1)
+        valid_response?(response)
+      rescue SocketError, Timeout::Error, Net::OpenTimeout
+        false
+      end
 
       return succeed! if succeed
 
@@ -56,8 +71,8 @@ module Boppers
       validations = []
 
       validations << status.include?(response.code)
-      validations << response.body.include?(contain) if contain.kind_of?(String)
-      validations << response.body.match?(contain) if contain.kind_of?(Regexp)
+      validations << response.body.include?(contain) if contain.is_a?(String)
+      validations << response.body.match?(contain) if contain.is_a?(Regexp)
 
       validations.all?
     end
@@ -71,10 +86,12 @@ module Boppers
         "You can check it at #{url}."
       ].join("\n")
 
-      Boppers.notify(:uptime,
-                     title: title,
-                     message: message,
-                     options: {color: :green})
+      Boppers.notify(
+        :uptime,
+        title: title,
+        message: message,
+        options: {color: :green}
+      )
     end
 
     def went_offline!
